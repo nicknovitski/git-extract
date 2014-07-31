@@ -1,0 +1,25 @@
+#!/usr/bin/bash
+function helptext {
+  echo usage: git extract /path
+}
+if [ -z "$1" ]
+then
+  helptext
+  exit 1
+fi
+for dir in $(ls -d $1/*/)
+  do
+  dirparts=(${dir//\// })
+  type=${dirparts[-2]}
+  child=${dirparts[-1]}
+  wd=$(pwd)
+  # TODO: look for origin specifically
+  remote=$(git remote -v | head -1 | awk '{print $2}')
+  # mkdir ../$type # TODO: only do this once
+  # cp -r $wd ../$type/$child
+  # cd ../$type/$child
+  # git filter-branch --prune-empty --subdirectory-filter $dir master
+  new_remote=$(echo $remote | sed "s/\/\(\w\+\)/\/$child/")
+  # git remote set-url origin $new_remote
+  # cd $wd
+done
